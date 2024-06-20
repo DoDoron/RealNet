@@ -90,6 +90,23 @@ def update_config(config,args):
 def main():
     args = parser.parse_args()
 
+    # Add this part to set the SDAS_DIR from environment variable
+    if 'SDAS_DIR' in os.environ:
+        sdas_dir = os.environ['SDAS_DIR']
+    else:
+        raise EnvironmentError("SDAS_DIR environment variable is not set")
+    
+    # Load the config file
+    with open(args.config, 'r') as file:
+        config = yaml.safe_load(file)
+
+    # Update the SDAS_DIR in config file
+    config['dataset']['train']['sdas_dir'] = sdas_dir
+
+    # Save the updated config
+    with open(args.config, 'w') as file:
+        yaml.safe_dump(config, file)
+        
     class_name_list=Categories[args.dataset]
     assert args.class_name in class_name_list
 

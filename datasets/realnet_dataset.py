@@ -89,7 +89,6 @@ def build_realnet_dataloader(cfg, training, distributed=True):
     )
     return data_loader
 
-
 class RealNetDataset(BaseDataset):
     def __init__(
         self,
@@ -101,7 +100,7 @@ class RealNetDataset(BaseDataset):
         normalize_fn,
         dataset,
         dtd_dir=None,
-        sdas_dir=None,
+        sdas_dir=os.environ['SDAS_DIR'],
         dtd_transparency_range=[],
         sdas_transparency_range=[],
         perlin_scale: int = 6,
@@ -121,7 +120,6 @@ class RealNetDataset(BaseDataset):
 
         if training:
             self.dtd_dir = dtd_dir
-            # self.sdas = os.environ.get('SDAS_DIR', sdas_dir)  # 환경 변수 사용
             self.sdas = sdas_dir
             self.sdas_transparency_range = sdas_transparency_range
             self.dtd_transparency_range = dtd_transparency_range
@@ -143,9 +141,9 @@ class RealNetDataset(BaseDataset):
         if sdas_dir:
             self.sdas_file_list = glob(os.path.join(sdas_dir, '*'))
 
-            # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
-            if not self.sdas_file_list:
-                print(f"SDAS directory is empty or not found: {self.sdas}")
+        # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
+        if not self.sdas_file_list:
+            print(f"SDAS directory is empty or not found: {self.sdas}")
 
     def __len__(self):
         return len(self.metas)
@@ -234,7 +232,10 @@ class RealNetDataset(BaseDataset):
             - texture: load DTD
             - structure: we first perform random adjustment of mirror symmetry, rotation, brightness, saturation,
             and hue on the input image  𝐼 . Then the preliminary processed image is uniformly divided into a 4×8 grid
-            and randomly arranged to obtain the disordered image   '''
+            and randomly arranged to obtain the disordered image  𝐼
+
+        step 3. blending image and anomaly source
+        '''
 
         target_foreground_mask = self.generate_target_foreground_mask(img, dataset, subclass)
         # Image.fromarray(target_foreground_mask*255).convert('L').save("foreground.jpg")
@@ -372,8 +373,8 @@ class RealNetDataset(BaseDataset):
         return aug
 
     def anomaly_source(self, img: np.ndarray,
-                       mask: np.ndarray,
-                       anomaly_type: str):
+                             mask: np.ndarray,
+                             anomaly_type: str):
 
         if anomaly_type == 'sdas':
             anomaly_source_img = self._sdas_source()
