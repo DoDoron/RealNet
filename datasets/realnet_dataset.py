@@ -99,7 +99,7 @@ class RealNetDataset(BaseDataset):
         normalize_fn,
         dataset,
         dtd_dir=None,
-        sdas_dir=os.environ['SDAS_DIR'],
+        sdas_dir=os.environ.get('SDAS_DIR'),
         dtd_transparency_range=[],
         sdas_transparency_range=[],
         perlin_scale: int = 6,
