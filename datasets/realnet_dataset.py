@@ -65,7 +65,9 @@ def build_realnet_dataloader(cfg, training, distributed=True):
         transform_fn=transform_fn,
         normalize_fn=normalize_fn,
         dtd_dir=cfg.get("dtd_dir", None),
-        sdas_dir=cfg.get("sdas_dir", None),
+        sdas_dir=cfg.get("sdas_dir", os.environ.get('SDAS_DIR', '')),
+
+        # sdas_dir=cfg.get("sdas_dir", None),
         dtd_transparency_range=cfg.get("dtd_transparency_range", []),
         sdas_transparency_range=cfg.get("sdas_transparency_range", []),
         perlin_scale=cfg.get("perlin_scale", 0),
@@ -99,7 +101,7 @@ class RealNetDataset(BaseDataset):
         normalize_fn,
         dataset,
         dtd_dir=None,
-        sdas_dir=os.environ['SDAS_DIR'],
+        sdas_dir=None,
         dtd_transparency_range=[],
         sdas_transparency_range=[],
         perlin_scale: int = 6,
@@ -141,9 +143,9 @@ class RealNetDataset(BaseDataset):
         if sdas_dir:
             self.sdas_file_list = glob(os.path.join(sdas_dir, '*'))
 
-        # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
-        if not self.sdas_file_list:
-            print(f"SDAS directory is empty or not found: {self.sdas}")
+            # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
+            if not self.sdas_file_list:
+                print(f"SDAS directory is empty or not found: {self.sdas}")
 
     def __len__(self):
         return len(self.metas)
