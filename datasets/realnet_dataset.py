@@ -99,7 +99,7 @@ class RealNetDataset(BaseDataset):
         normalize_fn,
         dataset,
         dtd_dir=None,
-        sdas_dir=None,
+        sdas_dir=os.environ['SDAS_DIR'],
         dtd_transparency_range=[],
         sdas_transparency_range=[],
         perlin_scale: int = 6,
@@ -119,8 +119,8 @@ class RealNetDataset(BaseDataset):
 
         if training:
             self.dtd_dir = dtd_dir
-            self.sdas = os.environ.get('SDAS_DIR', sdas_dir)  # 환경 변수 사용
-
+            # self.sdas = os.environ.get('SDAS_DIR', sdas_dir)  # 환경 변수 사용
+            self.sdas = sdas_dir
             self.sdas_transparency_range = sdas_transparency_range
             self.dtd_transparency_range = dtd_transparency_range
 
@@ -144,7 +144,7 @@ class RealNetDataset(BaseDataset):
         # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
         if not self.sdas_file_list:
             print(f"SDAS directory is empty or not found: {self.sdas}")
-            
+
     def __len__(self):
         return len(self.metas)
 
