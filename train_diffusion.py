@@ -123,7 +123,8 @@ def main():
         logger.info("config: {}".format(pprint.pformat(config)))
         logger.info("train_loader len is {}".format(len(train_loader)))
 
-    local_rank = int(os.environ["LOCAL_RANK"])
+    local_rank = int(os.environ.get("LOCAL_RANK", -1))
+    torch.cuda.set_device(local_rank)
 
     train_sampler = SpacedDiffusionBeatGans(**config.TrainSampler)
     test_sampler = SpacedDiffusionBeatGans(**config.TestSampler)
