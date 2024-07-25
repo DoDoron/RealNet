@@ -100,7 +100,10 @@ class RealNetDataset(BaseDataset):
         normalize_fn,
         dataset,
         dtd_dir=None,
-        sdas_dir=os.environ['SDAS_DIR'],
+
+        # only for my environment
+        sdas_dir=os.environ.get('SDAS_DIR', '/home/gurwns8926/RealNet/sdas'),
+        
         dtd_transparency_range=[],
         sdas_transparency_range=[],
         perlin_scale: int = 6,
@@ -140,10 +143,6 @@ class RealNetDataset(BaseDataset):
 
         if sdas_dir:
             self.sdas_file_list = glob(os.path.join(sdas_dir, '*'))
-
-        # 경로가 비어 있는지 확인하고, 비어 있다면 경로를 출력합니다.
-        if not self.sdas_file_list:
-            print(f"SDAS directory is empty or not found: {self.sdas}")
 
     def __len__(self):
         return len(self.metas)

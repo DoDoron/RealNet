@@ -21,7 +21,10 @@ from utils.categories import Categories
 
 warnings.filterwarnings('ignore')
 parser = argparse.ArgumentParser(description="train RealNet")
-parser.add_argument("--config", default="experiments/{}/realnet.yaml")
+
+# only for my environment
+parser.add_argument("--config", default="/home/gurwns8926/RealNet/RealNet/experiments/{}/realnet.yaml")
+
 parser.add_argument("--dataset", default="MVTec-AD",choices=['MVTec-AD','VisA','MPDD','BTAD'])
 parser.add_argument("--local_rank", default=-1, type=int)
 
